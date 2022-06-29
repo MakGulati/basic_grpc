@@ -1,0 +1,29 @@
+
+
+syntax = "proto3";
+// option java_multiple_files = true;
+// option java_package = "io.grpc.examples.helloworld";
+// option java_outer_classname = "HelloWorldProto";
+// option objc_class_prefix = "HLW";
+
+package FederatedLearning;
+// python -m grpc_tools.protoc -I ../protos --python_out=. --grpc_python_out=. ../protos/fl_starter.proto 
+
+service Trainer {
+  rpc InitialiseWeights (Request) returns (Response) {};
+  rpc TrainedWeights (stream Request) returns (stream Response) {};
+  rpc MultiRequest (stream Request) returns (Response) {};
+  rpc MultiResponse ( Request) returns (stream Response) {};
+}
+
+message Request {
+    int64 client_id = 1;
+    string request_data = 2;
+    int32 request_status = 3;
+}
+
+message Response {
+    int64 server_id = 1;
+    string response_data = 2;
+    int32 response_status = 3;
+}
