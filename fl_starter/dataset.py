@@ -71,6 +71,7 @@ def load(num_partitions: int) -> PartitionedDataset:
         y_train = y_train[: int(0.2 * len(y_train))]
         x_test = x_test[: int(0.2 * len(x_test))]
         y_test = y_test[: int(0.2 * len(y_test))]
+        print(len(y_train), len(y_test))
         train_dl = DataLoader(
             TensorDataset(
                 torch.tensor(x_train.astype(np.float32)), torch.LongTensor(y_train)
@@ -107,6 +108,8 @@ def toy_input_data(num_partitions: int) -> PartitionedDataset:
     )
 
     return test_dl
-if __name__ == '__main__':
-    m=load(1)
-    import pdb; pdb.set_trace()
+
+
+if __name__ == "__main__":
+
+    trainloader, testloader = load(2)[0]

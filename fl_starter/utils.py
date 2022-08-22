@@ -1,3 +1,5 @@
+from time import pthread_getcpuclockid
+from pyparsing import python_style_comment
 import torch
 
 DEVICE = torch.device("cpu")
@@ -36,8 +38,6 @@ def test(net, testloader):
     accuracy = correct / total
     return loss, accuracy
 
-    
-
     # Unpack the CIFAR-10 dataset partition
     # trainloader, testloader = dataset
 
@@ -55,17 +55,21 @@ class CifarClient:
         params_dict = zip(self.net.state_dict().keys(), parameters)
         state_dict = OrderedDict({k: torch.tensor(v) for k, v in params_dict})
         self.net.load_state_dict(state_dict, strict=True)
+        print("set_parameters")
 
     def fit(self, parameters, config):
         self.set_parameters(parameters)
         train(self.net, self.trainloader, epochs=1)
-        print('finished training')
-        return self.get_parameters(), len(self.trainloader), {}
+        print("finished training")
+        return self.get_parameters(), len(self.trainloader.dataset), {}
 
     def evaluate(self, parameters, config):
         self.set_parameters(parameters)
         loss, accuracy = test(self.net, self.testloader)
 
         return float(loss), len(self.testloader), {"accuracy": float(accuracy)}
-if __name__ == "__main__":
-    loss = train(SimpleNet().to(DEVICE), trainloader, 1)
+
+    def state_dict_to_json(self, parameters):
+        self.set_parameters(parameters)
+        torch.save(self.net.state_dict(), "sample.pth")
+        return "written to json"
